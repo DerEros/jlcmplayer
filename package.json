@@ -26,5 +26,9 @@
     "license": "GPLv3",
     "bugs": {
         "url": "https://github.com/DerEros/jlcmplayer/issues"
+    },
+    "devDependencies": {
+        "grunt-contrib-coffee": "~0.11.1",
+        "grunt": "~0.4.5"
     }
 }
