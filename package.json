@@ -1,0 +1,30 @@
+{
+    "name": "jlcmplayer",
+    "version": "0.0.1",
+    "description": "JLCM Lightweight Children's Music Player",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/DerEros/jlcmplayer.git"
+    },
+    "keywords": [
+        "Player",
+        "Music",
+        "Media",
+        "Remote",
+        "Simple",
+        "Easy",
+        "Basic",
+        "Remote",
+        "Web",
+        "HTML"
+    ],
+    "author": "DerEros",
+    "license": "GPLv3",
+    "bugs": {
+        "url": "https://github.com/DerEros/jlcmplayer/issues"
+    }
+}

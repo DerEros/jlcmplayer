@@ -26,3 +26,10 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+# IDE configuration files
+.idea
+*.iml
+
+# Build results
+target
