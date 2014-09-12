@@ -29,6 +29,8 @@ Leave out all the fancy features that media players usually have.
 * No complex media library
 * No shuffle/repeat
 * Not even a stop button
+* No security. You heard right. The player is intended to run in a home network and be used by 5-year-olds who can 
+barely read. No need to be hacker-proof.
 
 Technological considerations
 ----------------------------
