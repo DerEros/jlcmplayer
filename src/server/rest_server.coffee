@@ -35,7 +35,9 @@ class RestServer
     adminApp
 
   _listSources: ( req, res ) ->
-    @dataAccess.getSources().map( JSON.stringify ).pipe( res.contentType( 'application/json' ) )
+    @dataAccess.getSources().errors( ( err, push ) -> push( null, { error: err } ) )
+                            .map( JSON.stringify )
+                            .pipe( res.contentType( 'application/json' ) )
 
 
 module.exports = RestServer

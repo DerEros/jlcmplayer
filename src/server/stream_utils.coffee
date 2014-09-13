@@ -13,7 +13,18 @@ _nodebackExists = ( name, cb ) ->
 # Streaming wrapper for fs.exists
 _checkExists = _s.wrapCallback( _nodebackExists )
 
+# Logs an error to the given logger and than pushes it back into the stream for additional processing
+_logAndForwardError = _s.curry( (logger, text, error, push) ->
+  logger.error(text, error)
+  push(error)
+)
+
+# Creates a stream that contains the given error object on the error side. Useful for testing error handling
+_errorStream = ( err ) -> _s( ( push ) -> push( err ) )
+
 module.exports = {
   nodebackExists: _nodebackExists
   checkExists: _checkExists
+  logAndForwardError: _logAndForwardError
+  errorStream: _errorStream
 }
