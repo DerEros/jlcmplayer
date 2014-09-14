@@ -31,6 +31,7 @@ class RestServer
     adminApp.get( "/", express.static( "#{__dirname}/public/admin.html" ) )
 
     adminApp.get( "/sources", _.bind( @_listSources, @ ) )
+    adminApp.use( express.static("#{__dirname}/public/" ) )
 
     adminApp
 
