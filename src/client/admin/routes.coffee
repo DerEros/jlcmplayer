@@ -5,5 +5,5 @@
     constructor: ($routeProvider) ->
       $routeProvider.when "/sources",
         templateUrl: "views/sources.html"
-        controller: "HelloWorldController"
+        controller: "SourcesController"
 )
