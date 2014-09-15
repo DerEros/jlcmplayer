@@ -26,13 +26,7 @@
         </div>
     </div>
     <div class="app-body">
-        <div ng-controller="HelloWorldController">
-            <ng-view class="app-content" ng-hide="loading"></ng-view>
-            Chars: {{chars}}
-            <ul>
-                <li ng-repeat="char in chars">{{char}}</li>
-            </ul>
-        </div>
+        <ng-view class="app-content" ng-hide="loading"></ng-view>
     </div>
 </div>
 

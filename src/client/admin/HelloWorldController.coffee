@@ -1,5 +1,3 @@
-console.log(@app)
-
 @app.controller 'HelloWorldController',
   class HelloWorldController
     @$inject = [ '$scope' ]

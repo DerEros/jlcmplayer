@@ -57,6 +57,12 @@ module.exports = (grunt) ->
             dest: 'target/server/public/admin.html'
           },
           {
+            expand: true
+            cwd: 'src/client/admin/'
+            src: 'views/**'
+            dest: 'target/server/public/'
+          },
+          {
             src: 'target/client/3rdparty.js'
             dest: 'target/server/public/3rdparty.js'
           },
