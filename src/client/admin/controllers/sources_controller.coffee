@@ -3,4 +3,5 @@
     @$inject = [ '$scope' ]
 
     constructor: ($scope) ->
-      $scope.text = "Sources"
+      $scope.source = new Source("foo", "/foo/bar", true)
+      $scope.text = JSON.stringify($scope.source)

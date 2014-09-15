@@ -19,7 +19,7 @@ module.exports = (grunt) ->
         separator: ';'
 
       admin:
-        src: [ 'target/client/admin/index.js', 'target/client/admin/**/*.js' ]
+        src: [ 'target/client/admin/index.js', 'target/common/**/*.js', 'target/client/admin/**/*.js' ]
         dest: 'target/client/admin/admin.js'
 
     bower_concat:
@@ -73,7 +73,7 @@ module.exports = (grunt) ->
               'mobile-angular-ui-hover.min.css'
               'mobile-angular-ui-desktop.min.css'
             ]
-            dest: 'target/server/public/'
+            dest: 'target/server/public/css/'
           },
           {
             expand: true
