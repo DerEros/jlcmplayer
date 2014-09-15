@@ -25,13 +25,14 @@ class RestServer
     app = express()
     app.use( "/admin", @_createAdminApp() )
 
+    app.use( express.static("#{__dirname}/public/" ) )
+
   _createAdminApp: ->
     log.trace( "Creating admin app" )
     adminApp = express()
     adminApp.get( "/", express.static( "#{__dirname}/public/admin.html" ) )
 
     adminApp.get( "/sources", _.bind( @_listSources, @ ) )
-    adminApp.use( express.static("#{__dirname}/public/" ) )
 
     adminApp
 
