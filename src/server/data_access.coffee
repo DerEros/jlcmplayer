@@ -51,4 +51,11 @@ class DataAccess
     log.trace( "Getting data sources" )
     @_findStream( @db.sources.find( {} ) ).errors( streamUtils.logAndForwardError( log, "Error getting sources: " ) )
 
+  #
+  # Write one source object to the database
+  #
+  insertSource: (source) ->
+    log.trace( "Writing source object ")
+    @db.sources.insert( source )
+
 module.exports = DataAccess

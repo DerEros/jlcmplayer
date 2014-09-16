@@ -3,17 +3,14 @@ express = require( 'express' )
 _s = require( 'highland' )
 _ = require( 'lodash' )
 
-DataAccess = require( './data_access' )
-
 class RestServer
 
-  constructor: ( config ) ->
+  constructor: ( config, @dataAccess ) ->
     log.debug( "Constructing Express app" )
 
     @config = config || {}
     @port = @config["port"] || 3000
 
-    @dataAccess = new DataAccess( config )
     @app = @_createApp()
 
   start: ->

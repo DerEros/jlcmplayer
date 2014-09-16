@@ -19,7 +19,7 @@ module.exports = (grunt) ->
         separator: ';'
 
       admin:
-        src: [ 'target/client/admin/index.js', 'target/common/**/*.js', 'target/client/admin/**/*.js' ]
+        src: [ 'target/client/admin/app.js', 'target/common/**/*.js', 'target/client/admin/**/*.js' ]
         dest: 'target/client/admin/admin.js'
 
     bower_concat:
@@ -31,6 +31,7 @@ module.exports = (grunt) ->
           'angular'
           'angular-route'
           'mobile-angular-ui'
+          'restangular'
         ]
 
     copy:
