@@ -11,24 +11,7 @@
 </head>
 <body ng-app="JLCMPlayer">
 
-
-<div class="app">
-    <div class="navbar navbar-app navbar-absolute-top">
-
-        <div class="navbar-brand navbar-brand-center">
-            Configure Sources
-        </div>
-
-        <div class="btn-group pull-left">
-            <div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
-                <i class="fa fa-bars"></i> Menu
-            </div>
-        </div>
-    </div>
-    <div class="app-body">
-        <ng-view class="app-content" ng-hide="loading"></ng-view>
-    </div>
-</div>
+<ng-view></ng-view>
 
 <div class="sidebar sidebar-left" toggleable parent-active-class="sidebar-left-in" id="mainSidebar">
     <h1 class="app-name">JLCM Player - Admin Area</h1>

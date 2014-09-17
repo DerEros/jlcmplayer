@@ -1,38 +1,62 @@
-<div class="scrollable">
-    <div class="scrollable-content section">
-        <form action="">
-            <span ng-repeat="source in sources">
-                <div bs-panel title="{{source.name}}">
-                    <input bs-form-control
-                           type="text"
-                           ng-model="source.name"
-                           label="Name"
-                           label-class="col-xs-3 col-sm-2 col-lg-1"
-                           class="col-xs-4 col-sm-5 col-lg-4"
-                           placeholder="Source Name"
-                            />
+<div class="app">
+    <div class="navbar navbar-app navbar-absolute-top">
 
-                    <input bs-form-control
-                           type="text"
-                           ng-model="source.path"
-                           label="Path"
-                           label-class="col-xs-3 col-sm-2 col-lg-1"
-                           class="col-xs-9 col-sm-10 col-lg-11"
-                           placeholder="Source Path"
-                            />
+        <div class="navbar-brand navbar-brand-center">
+            Configure Sources
+        </div>
 
-                    <switch
-                            bs-form-control
-                            ng-change="switchChanged()"
-                            ng-model="source.active"
-                            ng-click="switchClicked()"
-                            label="Active"
-                            label-class="col-xs-3 col-sm-2 col-lg-1"
-                            class="col-xs-9 col-sm-10 col-lg-11"
-                            >
-                    </switch>
+        <div class="btn-group pull-left">
+            <div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
+                <i class="fa fa-bars"></i> Menu
+            </div>
+        </div>
+
+        <div class="btn-group pull-right">
+            <div ng-click="addSource()" class="btn btn-navbar">
+                <i class="fa fa-plus"></i> Add
+            </div>
+        </div>
+    </div>
+    <div class="app-body">
+        <div class="app-content">
+            <div class="scrollable">
+                <div class="scrollable-content section">
+                    <form action="">
+                        <span ng-repeat="source in sources">
+                            <div bs-panel title="{{source.name}}">
+                                <input bs-form-control
+                                       type="text"
+                                       ng-model="source.name"
+                                       label="Name"
+                                       label-class="col-xs-3 col-sm-2 col-lg-1"
+                                       class="col-xs-4 col-sm-5 col-lg-4"
+                                       placeholder="Source Name"
+                                        />
+
+                                <input bs-form-control
+                                       type="text"
+                                       ng-model="source.path"
+                                       label="Path"
+                                       label-class="col-xs-3 col-sm-2 col-lg-1"
+                                       class="col-xs-9 col-sm-10 col-lg-11"
+                                       placeholder="Source Path"
+                                        />
+
+                                <switch
+                                        bs-form-control
+                                        ng-change="switchChanged()"
+                                        ng-model="source.active"
+                                        ng-click="switchClicked()"
+                                        label="Active"
+                                        label-class="col-xs-3 col-sm-2 col-lg-1"
+                                        class="col-xs-9 col-sm-10 col-lg-11"
+                                        >
+                                </switch>
+                            </div>
+                        </span>
+                    </form>
                 </div>
-            </span>
-        </form>
+            </div>
+        </div>
     </div>
 </div>
