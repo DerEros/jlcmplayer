@@ -12,7 +12,7 @@
         </div>
 
         <div class="btn-group pull-right">
-            <div ng-click="addSource()" class="btn btn-navbar">
+            <div ng-click="ctrl.addSource()" class="btn btn-navbar">
                 <i class="fa fa-plus"></i> Add
             </div>
         </div>
@@ -22,16 +22,22 @@
             <div class="scrollable">
                 <div class="scrollable-content section">
                     <form action="">
-                        <span ng-repeat="source in sources">
+                        <span ng-repeat="source in ctrl.sources">
                             <div bs-panel title="{{source.name}}">
-                                <input bs-form-control
-                                       type="text"
-                                       ng-model="source.name"
-                                       label="Name"
-                                       label-class="col-xs-3 col-sm-2 col-lg-1"
-                                       class="col-xs-4 col-sm-5 col-lg-4"
-                                       placeholder="Source Name"
-                                        />
+                                <div class="form-group row">
+                                    <label class="control-label col-xs-3 col-sm-2 col-lg-1" for="source_name_input">
+                                        Name
+                                    </label>
+                                    <div class="form-control-wrapper col-xs-4 col-sm-5 col-lg-6">
+                                        <input class="form-control" type="text" ng-model="source.name"
+                                               placeholder="Source Name" id="source_name_input" disabled="true"/>
+                                    </div>
+                                    <div class="col-xs-offset-3 col-xs-2">
+                                        <div class="btn btn-default">
+                                            <i class="fa fa-trash-o" style="font-weight: bold"></i>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <input bs-form-control
                                        type="text"
@@ -40,6 +46,7 @@
                                        label-class="col-xs-3 col-sm-2 col-lg-1"
                                        class="col-xs-9 col-sm-10 col-lg-11"
                                        placeholder="Source Path"
+                                       disabled="true"
                                         />
 
                                 <switch
