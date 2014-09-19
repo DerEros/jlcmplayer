@@ -30,10 +30,14 @@
                                     </label>
                                     <div class="form-control-wrapper col-xs-4 col-sm-5 col-lg-6">
                                         <input class="form-control" type="text" ng-model="source.name"
-                                               placeholder="Source Name" id="source_name_input" disabled="true"/>
+                                               placeholder="Source Name" id="source_name_input"
+                                               ng-disabled="!ctrl.isBeingEdited(source)"/>
                                     </div>
-                                    <div class="col-xs-offset-3 col-xs-2">
-                                        <div class="btn btn-default">
+                                    <div class="col-xs-offset-2 col-xs-3">
+                                        <div class="btn btn-default" ng-click="ctrl.edit(source)">
+                                            <i class="fa fa-edit"></i>
+                                        </div>
+                                        <div class="btn btn-default" ng-click="ctrl.delete(source)">
                                             <i class="fa fa-trash-o" style="font-weight: bold"></i>
                                         </div>
                                     </div>
@@ -46,7 +50,7 @@
                                        label-class="col-xs-3 col-sm-2 col-lg-1"
                                        class="col-xs-9 col-sm-10 col-lg-11"
                                        placeholder="Source Path"
-                                       disabled="true"
+                                       ng-disabled="!ctrl.isBeingEdited(source)"
                                         />
 
                                 <switch
@@ -59,6 +63,13 @@
                                         class="col-xs-9 col-sm-10 col-lg-11"
                                         >
                                 </switch>
+
+                                <div class="pull-right" ng-show="ctrl.isBeingEdited(source)">
+                                    <button type="button" class="btn btn-primary" ng-click="ctrl.save()">Save</button>
+                                    <button type="button" class="btn btn-default" ng-click="ctrl.cancelEdit()">
+                                        Cancel
+                                    </button>
+                                </div>
                             </div>
                         </span>
                     </form>
