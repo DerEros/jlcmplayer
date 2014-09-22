@@ -12,7 +12,7 @@
         </div>
 
         <div class="btn-group pull-right">
-            <div ng-click="ctrl.addSource()" class="btn btn-navbar">
+            <div ng-click="ctrl.addSource()" class="btn btn-navbar" ng-disabled="ctrl.busy">
                 <i class="fa fa-plus"></i> Add
             </div>
         </div>
@@ -34,10 +34,10 @@
                                                ng-disabled="!ctrl.isBeingEdited(source)"/>
                                     </div>
                                     <div class="col-xs-offset-2 col-xs-3">
-                                        <div class="btn btn-default" ng-click="ctrl.edit(source)">
+                                        <div class="btn btn-default" ng-click="ctrl.edit(source)" ng-disabled="ctrl.busy">
                                             <i class="fa fa-edit"></i>
                                         </div>
-                                        <div class="btn btn-default" ng-click="ctrl.delete(source)">
+                                        <div class="btn btn-default" ng-click="ctrl.delete(source)" ng-disabled="ctrl.busy">
                                             <i class="fa fa-trash-o" style="font-weight: bold"></i>
                                         </div>
                                     </div>
@@ -61,6 +61,7 @@
                                         label="Active"
                                         label-class="col-xs-3 col-sm-2 col-lg-1"
                                         class="col-xs-9 col-sm-10 col-lg-11"
+                                        ng-disabled="ctrl.busy"
                                         >
                                 </switch>
 

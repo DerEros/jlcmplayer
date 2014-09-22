@@ -45,6 +45,13 @@ class DataAccess
   _addDB: ( dbDesc ) -> @db[dbDesc.name] = dbDesc.db
 
   #
+  # Get a source object from the data base as a stream of JSON objects
+  #
+  getSource: (id) ->
+    log.trace( "Getting data source #{id}" )
+    @_findStream( @db.sources.find( { _id: id } ) ).errors( streamUtils.logAndForwardError( log, "Error getting source: " ) )
+
+  #
   # Get all source objects from the data base as a stream of JSON objects
   #
   getSources: ->
@@ -58,5 +65,23 @@ class DataAccess
     log.trace( "Writing source object ")
     streamUtils.streamify( @db.sources, @db.sources.insert, source )
                .errors( streamUtils.logAndForwardError( log, "Error saving source: " ) )
+
+  #
+  # Write one source object to database - either insert or update depending on its existence
+  #
+  upsertSource: ( source ) ->
+    log.trace( "Upserting source object ")
+    streamUtils.streamify( @db.sources, @db.sources.update, { _id: source._id }, source, { upsert: true } )
+               .errors( streamUtils.logAndForwardError( log, "Error upserting source: " ) )
+               .doto( (num) -> log.trace("Upserted #{num} objects" ) )
+
+  #
+  # Delete one source object from database
+  #
+  deleteSource: ( sourceId ) ->
+    log.trace( "Deleting source object #{sourceId}" )
+    streamUtils.streamify( @db.sources, @db.sources.remove, { _id: sourceId }, {} )
+               .errors( streamUtils.logAndForwardError( log, "Error deleting source: " ) )
+               .doto( (num) -> log.trace("Deleted #{num} objects" ) )
 
 module.exports = DataAccess

@@ -4,7 +4,8 @@
 
     constructor: ( @$scope, @Restangular ) ->
       @sources = []
-      Restangular.all( 'admin' ).all( 'sources' ).getList().then( (list) => @sources = list )
+      @busy = true
+      Restangular.all( 'admin' ).all( 'sources' ).getList().then( (list) => @sources = list ).finally(@unbusy)
 
       @resetEditing()
 
@@ -13,7 +14,8 @@
       @sources.unshift( new Source( "New", "/", false ) )
       @edit(@sources[0])
 
-      @Restangular.all( 'admin' ).all( "sources" ).post( @sources[0] ).then( (element) -> console.log("saved: ", element ))
+      @busy = true
+      @Restangular.all( 'admin' ).all( "sources" ).post( @sources[0] ).finally(@unbusy)
 
     edit: ( source ) ->
       @cancelEdit()
@@ -29,13 +31,23 @@
     backupBeforeEdit: ( source ) -> @sourceOldValues = _.clone( source )
 
     delete: ( source ) ->
-      @sources = _.filter( @sources, (s) -> s != source )
-      # TODO: tell the backend
+      @busy = true
+      source.remove()
+            .then( => @sources = _.without( @sources, source ))
+            .catch( -> alert("Deleting failed") )
+            .finally( @unbusy )
+
 
     save: ->
-      @resetEditing()
-      # TODO: tell the backend
+      @busy = true
+      @Restangular.all( 'admin' ).all( "sources" ).post( @currentlyEditing )
+                  .then( @resetEditing )
+                  .catch( @cancelEdit )
+                  .finally( @unbusy )
 
-    resetEditing: ->
+    resetEditing: =>
       @currentlyEditing = "none"
       @sourceOldValues = "none"
+
+    unbusy: =>
+      @busy = false

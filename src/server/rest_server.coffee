@@ -16,7 +16,7 @@ class RestServer
 
   start: ->
     log.info( "Rest server starting on port #{@port}" )
-    @app.listen( @port )
+    @app.listen( @port, "0.0.0.0" )
 
   _createApp: ->
     log.trace( "Creating app" )
@@ -32,9 +32,16 @@ class RestServer
     adminApp.get( "/", express.static( "#{__dirname}/public/admin.html" ) )
 
     adminApp.get( "/sources", _.bind( @_listSources, @ ) )
+            .get( "/sources/:id", _.bind( @_getSource, @ ) )
             .post( "/sources", _.bind( @_saveSource, @ ) )
+            .delete( "/sources/:id", _.bind( @_deleteSource, @ ) )
 
     adminApp
+
+  _getSource: ( req, res ) ->
+    @dataAccess.getSource( req.params.id ).errors( ( err, push ) -> push( null, { error: err } ) )
+                                          .map( JSON.stringify )
+                                          .pipe( res.contentType( 'application/json' ) )
 
   _listSources: ( req, res ) ->
     @dataAccess.getSources().errors( ( err, push ) -> push( null, { error: err } ) )
@@ -43,9 +50,14 @@ class RestServer
 
   _saveSource: ( req, res ) ->
     log.debug( "Got save request for source object" )
-    @dataAccess.insertSource( req.body ).errors( ( err, push ) -> push( null, { error: err } ) )
+    @dataAccess.upsertSource( req.body ).errors( ( err, push ) -> push( null, { error: err } ) )
                                         .map( JSON.stringify )
                                         .pipe( res.contentType( 'application/json' ).status(201) )
 
+  _deleteSource: ( req, res ) ->
+    log.debug( "Got delete request for source object" )
+    @dataAccess.deleteSource( req.params.id ).errors( ( err, push ) -> push( null, { error: err } ) )
+                                             .map( JSON.stringify )
+                                             .pipe( res.status(204) )
 
 module.exports = RestServer
