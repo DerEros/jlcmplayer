@@ -11,7 +11,9 @@ writeDummyDataToDb = ( dataAccess ) ->
   dummyDataProducer = new DummyData()
   dummyData = dummyDataProducer.produceData()
 
-  _s(dummyData.sources).each( (source) -> dataAccess.insertSource( source ) )
+  _s(dummyData.sources).flatMap( (source) -> dataAccess.insertSource( source ) ).each( (result) ->
+    log.trace("Wrote #{result._id}")
+  )
 
 main = () ->
   log.info( "Starting Server" )

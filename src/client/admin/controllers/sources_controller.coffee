@@ -2,20 +2,18 @@
   class SourcesController
     @$inject = [ '$scope', 'Restangular' ]
 
-    constructor: ( @$scope, Restangular ) ->
+    constructor: ( @$scope, @Restangular ) ->
+      @sources = []
       Restangular.all( 'admin' ).all( 'sources' ).getList().then( (list) => @sources = list )
 
       @resetEditing()
 
     addSource: ->
       @cancelEdit()
+      @sources.unshift( new Source( "New", "/", false ) )
+      @edit(@sources[0])
 
-      sources = @sources || []
-      sources.unshift( new Source( "New", "/", false ) )
-
-      @edit(sources[0])
-
-      # TODO: tell the backend
+      @Restangular.all( 'admin' ).all( "sources" ).post( @sources[0] ).then( (element) -> console.log("saved: ", element ))
 
     edit: ( source ) ->
       @cancelEdit()

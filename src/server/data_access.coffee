@@ -56,6 +56,7 @@ class DataAccess
   #
   insertSource: (source) ->
     log.trace( "Writing source object ")
-    @db.sources.insert( source )
+    streamUtils.streamify( @db.sources, @db.sources.insert, source )
+               .errors( streamUtils.logAndForwardError( log, "Error saving source: " ) )
 
 module.exports = DataAccess
