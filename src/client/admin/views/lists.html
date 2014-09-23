@@ -1,0 +1,29 @@
+<div class="app">
+    <div class="navbar navbar-app navbar-absolute-top">
+
+        <div class="navbar-brand navbar-brand-center">
+            Configure Albums &amp; Lists
+        </div>
+
+        <div class="btn-group pull-left">
+            <div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
+                <i class="fa fa-bars"></i> Menu
+            </div>
+        </div>
+
+        <div class="btn-group pull-right">
+            <div ng-click="ctrl.rescan()" class="btn btn-navbar" ng-disabled="ctrl.busy">
+                <i class="fa fa-refresh"></i> Rescan
+            </div>
+        </div>
+    </div>
+    <div class="app-body">
+        <div class="app-content">
+            <div class="scrollable">
+                <div class="scrollable-content section">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
