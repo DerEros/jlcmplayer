@@ -36,6 +36,19 @@ _streamify = ( self, f, args... ) ->
     f.apply( self, args.concat( [ callback ] ) )
   )
 
+# Similar to the one above but for callbacks that take three arguments
+_streamify3 = ( self, f, args... ) ->
+  _s( ( push ) ->
+    callback = ( err, data1, data2 ) ->
+      if err
+        push( err )
+      else
+        push( null, [ data1, data2 ] )
+      push( null, nil )
+
+    f.apply( self, args.concat( [ callback ] ) )
+  )
+
 
 module.exports = {
   nodebackExists: _nodebackExists
@@ -43,4 +56,5 @@ module.exports = {
   logAndForwardError: _logAndForwardError
   errorStream: _errorStream
   streamify: _streamify
+  streamify3: _streamify3
 }

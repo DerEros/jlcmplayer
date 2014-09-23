@@ -71,9 +71,10 @@ class DataAccess
   #
   upsertSource: ( source ) ->
     log.trace( "Upserting source object ")
-    streamUtils.streamify( @db.sources, @db.sources.update, { _id: source._id }, source, { upsert: true } )
+    streamUtils.streamify3( @db.sources, @db.sources.update, { _id: source._id }, source, { upsert: true } )
                .errors( streamUtils.logAndForwardError( log, "Error upserting source: " ) )
-               .doto( (num) -> log.trace("Upserted #{num} objects" ) )
+               .doto( ( [ num, doc ] ) -> log.trace("Upserted #{num} objects" ) )
+               .map( ( [ num, doc ] ) -> doc )
 
   #
   # Delete one source object from database

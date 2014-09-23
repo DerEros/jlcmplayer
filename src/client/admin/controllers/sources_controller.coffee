@@ -12,10 +12,13 @@
     addSource: ->
       @cancelEdit()
       @sources.unshift( new Source( "New", "/", false ) )
-      @edit(@sources[0])
+      @edit( @sources[0] )
 
       @busy = true
-      @Restangular.all( 'admin' ).all( "sources" ).post( @sources[0] ).finally(@unbusy)
+      @Restangular.all( 'admin' ).all( "sources" ).post( @currentlyEditing )
+                  .then( @updateEditedItem )
+                  .catch( @cancelEdit )
+                  .finally( @unbusy )
 
     edit: ( source ) ->
       @cancelEdit()
@@ -41,6 +44,7 @@
     save: ->
       @busy = true
       @Restangular.all( 'admin' ).all( "sources" ).post( @currentlyEditing )
+                  .then( @updateEditedItem   )
                   .then( @resetEditing )
                   .catch( @cancelEdit )
                   .finally( @unbusy )
@@ -48,6 +52,9 @@
     resetEditing: =>
       @currentlyEditing = "none"
       @sourceOldValues = "none"
+
+    updateEditedItem: ( newValues ) =>
+      _.assign( @currentlyEditing, newValues )
 
     unbusy: =>
       @busy = false
