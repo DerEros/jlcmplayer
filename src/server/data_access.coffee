@@ -69,7 +69,7 @@ class DataAccess
   #
   # Write one source object to the database
   #
-  insertSource: (source) ->
+  insertSource: ( source ) ->
     log.trace( "Writing source object ")
     streamUtils.streamify( @db.sources, @db.sources.insert, source )
                .errors( streamUtils.logAndForwardError( log, "Error saving source: " ) )
@@ -102,6 +102,26 @@ class DataAccess
                .errors( streamUtils.logAndForwardError( log, "Error upserting media: " ) )
                .doto( ( [ num, doc ] ) -> log.trace("Upserted #{num} objects" ) )
                .map( ( [ num, doc ] ) -> doc )
+
+  #
+  # Get all media grouped by album. Merge both, list records and media records
+  #
+  getListsAndMedia: ->
+    log.trace( "Getting lists and media" )
+    streamUtils.streamify( @db.lists, @db.lists.find, {} )
+               .errors( streamUtils.logAndForwardError( log, "Error getting lists and media: " ) )
+               .flatten()
+               .map( ( list ) => @getMediaByAlbumName( list.title ).map( ( media ) -> _s.set( 'media', media, list ) ) )
+               .flatten()
+               .collect()
+
+  #
+  # Gets all media by album name
+  #
+  getMediaByAlbumName: ( albumName ) ->
+    log.trace( "Getting media from album #{albumName}" )
+    streamUtils.streamify3( @db.media, @db.media.find, { album: albumName }, { _id: 1, title: 1, artist: 1, path: 1, track: 1 } )
+               .errors( streamUtils.logAndForwardError( log, "Error getting media: " ) )
 
   #
   # Write one list object to database - either insert or update depending on its existence

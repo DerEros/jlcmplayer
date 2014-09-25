@@ -67,12 +67,18 @@ class RestServer
       activeDataSources = @dataAccess.getSources().flatten().where( { active: true } )
       [ mediaStream, albumStream ] = @musicScanner.scan( activeDataSources )
 
+      albumStream.on('end', => @_sendListsAndMedia( res ) )
+
       albumStream.each( ( a ) => @dataAccess.upsertList( a ).resume() )
       mediaStream.each( ( m ) => @dataAccess.upsertMedia( m ).resume() )
     else
       log.debug( "Got scan request: without rescan" )
+      @_sendListsAndMedia( res )
 
-    res.status( 200 ).send( {} )
+  _sendListsAndMedia: ( res ) ->
+    @dataAccess.getListsAndMedia().map( @_withRes( res, 200 ) )
+      .errors( @_errorWithStatus( res, 404 ) )
+      .each( @_sendArray )
 
   # Utility functions
   #####################
@@ -86,5 +92,6 @@ class RestServer
 
   # Send the streamed data using the also streamd result object. Use _withRes first
   _send: ( { res, data } = dataWithRes ) -> res.send( JSON.stringify( data ) )
+  _sendArray: ( { res, data } = dataWithRes ) -> res.send( JSON.stringify( data ) )
 
 module.exports = RestServer
