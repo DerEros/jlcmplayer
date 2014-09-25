@@ -18,6 +18,11 @@ class DummyData
         active: false
       }
       {
+        name: "Home"
+        path: "/tmp"
+        active: true
+      }
+      {
         name: "Local"
         path: "/home/user/Music"
         active: true

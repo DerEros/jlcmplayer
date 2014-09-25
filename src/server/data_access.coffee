@@ -14,6 +14,14 @@ class DataAccess
     name: 'sources'
     filename: 'sources.db'
     autoload: true
+  ,
+    name: 'lists'
+    filename: 'lists.db'
+    autoload: true
+  ,
+    name: 'media'
+    filename: 'media.db'
+    autoload: true
   ]
 
   constructor: ( config ) ->
@@ -84,5 +92,16 @@ class DataAccess
     streamUtils.streamify( @db.sources, @db.sources.remove, { _id: sourceId }, {} )
                .errors( streamUtils.logAndForwardError( log, "Error deleting source: " ) )
                .doto( (num) -> log.trace("Deleted #{num} objects" ) )
+
+  #
+  # Write one media object to database - either insert or update depending on its existence
+  #
+  upsertMedia: ( media ) ->
+    log.trace( "Upserting media object " )
+    streamUtils.streamify3( @db.media, @db.media.update, { _id: media._id }, media, { upsert: true } )
+               .errors( streamUtils.logAndForwardError( log, "Error upserting media: " ) )
+               .doto( ( [ num, doc ] ) -> log.trace("Upserted #{num} objects" ) )
+               .map( ( [ num, doc ] ) -> doc )
+
 
 module.exports = DataAccess

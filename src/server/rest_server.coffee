@@ -5,8 +5,7 @@ _ = require( 'lodash' )
 bodyParser = require( 'body-parser' )
 
 class RestServer
-
-  constructor: ( config, @dataAccess ) ->
+  constructor: ( config, @dataAccess, @musicScanner ) ->
     log.debug( "Constructing Express app" )
 
     @config = config || {}
@@ -36,6 +35,8 @@ class RestServer
             .post( "/sources", _.bind( @_saveSource, @ ) )
             .delete( "/sources/:id", _.bind( @_deleteSource, @ ) )
 
+    adminApp.get( "/lists", _.bind( @_scanSources, @ ) )
+
     adminApp
 
   _getSource: ( req, res ) ->
@@ -59,6 +60,16 @@ class RestServer
     @dataAccess.deleteSource( req.params.id ).map( @_withRes( res, 204 ) )
                                              .errors( @_errorWithStatus( res, 500 ) )
                                              .each( @_send )
+
+  _scanSources: ( req, res ) ->
+    if req.query.rescan
+      log.debug( "Got scan request: with rescan" )
+      activeDataSources = @dataAccess.getSources().flatten().where( { active: true } )
+      @musicScanner.scan( activeDataSources ).each( ( m ) => @dataAccess.upsertMedia( m ).resume() )
+    else
+      log.debug( "Got scan request: without rescan" )
+
+    res.status( 200 ).send( {} )
 
   # Utility functions
   #####################

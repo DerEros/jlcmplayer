@@ -2,6 +2,7 @@ logConfigurator = require( './logger_config' )
 RestServer = require( './rest_server' )
 log = require( 'log4js' ).getLogger( 'server' )
 DataAccess = require( './data_access' )
+MusicScanner = require( './music_scanner' )
 DummyData = require( './dummy_data' )
 _s = require( 'highland' )
 
@@ -20,10 +21,11 @@ main = () ->
   config = {}
 
   dataAccess = new DataAccess( config )
+  musicScanner = new MusicScanner( config )
 
   writeDummyDataToDb( dataAccess )
 
-  rs = new RestServer( config, dataAccess )
+  rs = new RestServer( config, dataAccess, musicScanner )
   rs.start()
 
   log.info( "Server started" )
