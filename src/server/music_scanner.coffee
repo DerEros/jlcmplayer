@@ -20,8 +20,8 @@ class MusicScanner
     sources.map( @_filesByPattern( /.*\.mp3$/ ) )
            .flatten()
            .map( @_getID3 )
-           .parallel( 10 )
            .flatten()
+           .errors( ( err ) -> log.error( "Error while scanning music files: #{err}" ) )
            .map( @_reduceTagsObj )
            .doto( @_logTags )
 
@@ -46,17 +46,23 @@ class MusicScanner
   # Open the specified MP3 file and read the ID3 tags
   #
   _getID3: ( path ) ->
+    log.trace( "Scanning ID3 tags of #{path}")
     _s( ( push ) ->
-      fs.createReadStream( path )
-        .pipe( new lame.Decoder() )
-        .on( 'id3v1', ( tags ) ->
-          push( null, _s.set( 'path', path, tags ) )
-          push( null, _s.nil )
-        )
-        .on( 'id3v2', ( tags ) ->
-          push( null, _s.set( 'path', path, tags ) )
-          push( null, _s.nil )
-        )
+      try
+        fs.createReadStream( path )
+          .pipe( new lame.Decoder() )
+          .on( 'id3v1', ( tags ) ->
+            push( null, _s.set( 'path', path, tags ) )
+            push( null, _s.nil )
+          )
+          .on( 'id3v2', ( tags ) ->
+            push( null, _s.set( 'path', path, tags ) )
+            push( null, _s.nil )
+          )
+      catch error
+        log.error( "Error while reading ID3 tags for #{path}: #{error}" )
+        push( error )
+        push( null, _s.nil )
     )
 
   #
