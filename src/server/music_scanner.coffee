@@ -17,13 +17,22 @@ class MusicScanner
 
   scan: ( sources ) ->
     log.debug( "About to scan now" )
-    sources.map( @_filesByPattern( /.*\.mp3$/ ) )
-           .flatten()
-           .map( @_getID3 )
-           .flatten()
-           .errors( ( err ) -> log.error( "Error while scanning music files: #{err}" ) )
-           .map( @_reduceTagsObj )
-           .doto( @_logTags )
+    mediaStream = sources.map( @_filesByPattern( /.*\.mp3$/ ) )
+                         .flatten()
+                         .map( @_getID3 )
+                         .flatten()
+                         .errors( ( err ) -> log.error( "Error while scanning music files: #{err}" ) )
+                         .map( @_reduceTagsObj )
+                         .doto( @_logTags )
+
+    albumStream = mediaStream.observe()
+                             .map( ( tags ) -> { title: tags.album, artist: tags.artist, type: 'album' } )
+                             .group( 'title' )
+                             .map( (a) -> _(a).pairs().map( _.last ).map( _.first ).value() )
+                             .flatten()
+                             .map( ( album ) => _s.set( '_id', @_createAlbumId( album ), album ) )
+
+    [ mediaStream, albumStream ]
 
   #
   # Scan for files matching the given pattern starting in the directory with basePath
@@ -37,7 +46,7 @@ class MusicScanner
 
         if !more then walker.pause()
       )
-      .on( 'done', -> stream.destroy() )
+      .on( 'done', -> log.warn('ending stream'); stream.end() )
       .walk()
 
     stream
@@ -96,6 +105,15 @@ class MusicScanner
     id = crypto.createHash( 'sha1' )
     id.update( tags.title )
     id.update( tags.album )
+    id.update( tags.artist )
+    id.digest( 'base64' )
+
+  #
+  # Calculates a unique ID based on title and artist
+  #
+  _createAlbumId: ( tags ) ->
+    id = crypto.createHash( 'sha1' )
+    id.update( tags.title )
     id.update( tags.artist )
     id.digest( 'base64' )
 

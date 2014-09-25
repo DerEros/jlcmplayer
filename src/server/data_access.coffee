@@ -103,5 +103,15 @@ class DataAccess
                .doto( ( [ num, doc ] ) -> log.trace("Upserted #{num} objects" ) )
                .map( ( [ num, doc ] ) -> doc )
 
+  #
+  # Write one list object to database - either insert or update depending on its existence
+  #
+  upsertList: ( list ) ->
+    log.trace( "Upserting list object " )
+    streamUtils.streamify3( @db.lists, @db.lists.update, { _id: list._id }, list, { upsert: true } )
+               .errors( streamUtils.logAndForwardError( log, "Error upserting list: " ) )
+               .doto( ( [ num, doc ] ) -> log.trace("Upserted #{num} objects" ) )
+               .map( ( [ num, doc ] ) -> doc )
+
 
 module.exports = DataAccess

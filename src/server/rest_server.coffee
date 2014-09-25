@@ -65,7 +65,10 @@ class RestServer
     if req.query.rescan
       log.debug( "Got scan request: with rescan" )
       activeDataSources = @dataAccess.getSources().flatten().where( { active: true } )
-      @musicScanner.scan( activeDataSources ).each( ( m ) => @dataAccess.upsertMedia( m ).resume() )
+      [ mediaStream, albumStream ] = @musicScanner.scan( activeDataSources )
+
+      albumStream.each( ( a ) => @dataAccess.upsertList( a ).resume() )
+      mediaStream.each( ( m ) => @dataAccess.upsertMedia( m ).resume() )
     else
       log.debug( "Got scan request: without rescan" )
 
