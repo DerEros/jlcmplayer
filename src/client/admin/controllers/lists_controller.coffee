@@ -3,9 +3,16 @@
     @$inject = [ "Restangular" ]
 
     constructor: ( @Restangular ) ->
-      console.log("ListsController")
-      @Restangular.all( 'admin' ).all( 'lists' ).getList().then( console.log )
+      @lists = []
+      @busy = true
+
+      @Restangular.all( 'admin' ).all( 'lists' ).getList().then( @_updateLists ).finally( @_unbusy )
 
     rescan: ->
-      console.log("Rescanning")
-      @Restangular.all( 'admin' ).all( 'lists' ).getList( { rescan: true } ).then( console.log )
+      @Restangular.all( 'admin' ).all( 'lists' ).getList( { rescan: true } ).then( @_updateLists ).finally( @_unbusy )
+
+    _updateLists: ( newLists ) =>
+      console.log("Updating list", newLists)
+      @lists = newLists
+
+    _unbusy: => @busy = false

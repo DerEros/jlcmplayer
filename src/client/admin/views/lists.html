@@ -22,6 +22,26 @@
             <div class="scrollable">
                 <div class="scrollable-content section">
 
+                    <!-- ------------- Album template ---------------- -->
+                    <div ng-repeat="list in ctrl.lists">
+                        <img src="img/no_cover.png" alt="No Cover" class="col-xs-6 col-sm-4 col-lg-1"/>
+                        <table class="table table-striped">
+                            <tr>
+                                <td>
+                                    <span style="font-weight: bold; font-size: 120%">{{ list.title }}</span> <br/>
+                                    <span style="font-style: italic">{{ list.artist }}</span>
+                                </td>
+                                <td>
+                                    <switch class="pull-right"></switch>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="media in list.media">
+                                <td colspan="2">{{ media.track }} - {{ media.title }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- ------------- /Album template ---------------- -->
+
                 </div>
             </div>
         </div>

@@ -60,6 +60,12 @@ module.exports = (grunt) ->
           },
           {
             expand: true
+            cwd: 'src/client/'
+            src: 'img/**'
+            dest: 'target/server/public/'
+          },
+          {
+            expand: true
             cwd: 'src/client/admin/'
             src: 'views/**'
             dest: 'target/server/public/'
