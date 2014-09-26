@@ -111,7 +111,7 @@ class DataAccess
     streamUtils.streamify( @db.lists, @db.lists.find, {} )
                .errors( streamUtils.logAndForwardError( log, "Error getting lists and media: " ) )
                .flatten()
-               .map( ( list ) => @getMediaByAlbumName( list.title ).map( ( media ) -> _s.set( 'media', media, list ) ) )
+               .map( ( list ) => @getMediaByAlbumName( list.title ).map( ( media ) -> _s.set( 'media', _.sortBy( _.first( media ), 'track' ), list ) ) )
                .flatten()
                .collect()
 
