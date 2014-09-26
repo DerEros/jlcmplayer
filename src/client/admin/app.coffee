@@ -1,2 +1,2 @@
-@app = angular.module('JLCMPlayer', [ 'ngRoute', 'mobile-angular-ui', 'restangular' ])
+@app = angular.module('JLCMPlayer', [ 'ngRoute', 'ngTouch', 'mobile-angular-ui', 'restangular' ])
 

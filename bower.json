@@ -1,0 +1,42 @@
+{
+  "name": "jlcmplayer",
+  "version": "0.0.1",
+  "homepage": "https://github.com/DerEros/jlcmplayer",
+  "authors": [
+    "DerEros"
+  ],
+  "description": "JLCM Lightweight Children's Music Player",
+  "main": "index.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "Player",
+    "Music",
+    "Media",
+    "Remote",
+    "Simple",
+    "Easy",
+    "Basic",
+    "Remote",
+    "Web",
+    "HTML"
+  ],
+  "license": "GPLv3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "highland": "~1.29.0",
+    "angular": "*",
+    "angular-route": "~1.2.25",
+    "mobile-angular-ui": "~1.1.0-beta.30",
+    "restangular": "~1.4.0",
+    "angular-touch": "~1.2.25"
+  }
+}

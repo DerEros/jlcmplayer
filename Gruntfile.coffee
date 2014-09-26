@@ -30,6 +30,7 @@ module.exports = (grunt) ->
           'highland'
           'angular'
           'angular-route'
+          'angular-touch'
           'mobile-angular-ui'
           'restangular'
         ]
