@@ -36,6 +36,7 @@ class RestServer
             .delete( "/sources/:id", _.bind( @_deleteSource, @ ) )
 
     adminApp.get( "/lists", _.bind( @_scanSources, @ ) )
+            .put( "/lists/:id", _.bind( @_updateList, @ ) )
 
     adminApp
 
@@ -79,6 +80,12 @@ class RestServer
     @dataAccess.getListsAndMedia().map( @_withRes( res, 200 ) )
       .errors( @_errorWithStatus( res, 404 ) )
       .each( @_sendArray )
+
+  _updateList: ( req, res ) ->
+    log.debug( "Got update request for list object" )
+    @dataAccess.updateListActivation( req.body ).map( @_withRes( res, 201 ) )
+               .errors( @_errorWithStatus( res, 500 ) )
+               .each( @_send )
 
   # Utility functions
   #####################

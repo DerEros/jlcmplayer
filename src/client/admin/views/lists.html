@@ -32,7 +32,9 @@
                                     <span style="font-style: italic">{{ list.artist }}</span>
                                 </td>
                                 <td>
-                                    <switch class="pull-right"></switch>
+                                    <switch ng-model="list.active"
+                                            ng-change="ctrl.changeActivation( list )"
+                                            class="pull-right"></switch>
                                 </td>
                             </tr>
                             <tr ng-repeat="media in list.media">

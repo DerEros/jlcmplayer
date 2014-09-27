@@ -133,5 +133,15 @@ class DataAccess
                .doto( ( [ num, doc ] ) -> log.trace("Upserted #{num} objects" ) )
                .map( ( [ num, doc ] ) -> doc )
 
+  #
+  # Changes the activation status (true/false) of the specified list
+  #
+  updateListActivation: ( list ) ->
+    log.trace( "Updating list activation status of '#{ list._id } to #{ list.active }" )
+    streamUtils.streamify( @db.lists, @db.lists.update, { _id: list._id }, { $set: { active: list.active } })
+               .errors( streamUtils.logAndForwardError( log, "Error upserting list: " ) )
+               .doto( ( [ num, doc ] ) -> log.trace("Updated #{num} objects" ) )
+               .map( ( [ num, doc ] ) -> doc )
+
 
 module.exports = DataAccess
