@@ -6,7 +6,7 @@ express = require( 'express' )
 log = require( 'log4js' ).getLogger( 'rest_server' )
 
 class RestServer
-  constructor: ( config, @amazonCoverApi ) ->
+  constructor: ( config, @cache, @amazonCoverApi ) ->
     log.info( "Constructing Express app" )
 
     @config = config || {}
@@ -29,9 +29,14 @@ class RestServer
     album = req.query.album
     artist = req.query.artist
 
-    @amazonCoverApi.getCoverUrl( album, artist ).map( ( url ) -> { url: url } )
-                                                .map( JSON.stringify )
-                                                .pipe( res.status(200).contentType( "application/json" ) )
+    urlFromCache = @cache.getCoverUrl( album, artist )
+    urlFromAmazon = @amazonCoverApi.getCoverUrl( album, artist )
+                                   .doto( ( url ) => @cache.setCoverUrl( album, artist, url ) )
+                                   .map( ( url ) -> { url: url } )
+
+    urlFromCache.otherwise( urlFromAmazon )
+                .map( JSON.stringify )
+                .pipe( res.status(200).contentType( "application/json" ) )
 
 
 module.exports = RestServer
