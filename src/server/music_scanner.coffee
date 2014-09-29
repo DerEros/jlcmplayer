@@ -26,7 +26,7 @@ class MusicScanner
                          .doto( @_logTags )
 
     albumStream = mediaStream.observe()
-                             .map( ( tags ) -> { title: tags.album, artist: tags.artist, type: 'album' } )
+                             .map( ( tags ) -> { title: tags.album, artist: tags.artist, type: 'album', active: true } )
                              .group( 'title' )
                              .map( (a) -> _(a).pairs().map( _.last ).map( _.first ).value() )
                              .flatten()
