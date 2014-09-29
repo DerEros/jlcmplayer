@@ -90,6 +90,14 @@ module.exports = (grunt) ->
             dest: 'target/server/public/'
           }
         ]
+
+      cache:
+        files: [
+          {
+            src: 'src/cover_cache/amazon_secret.json'
+            dest: 'target/cover_cache/amazon_secret.json'
+          }
+        ]
   )
 
   grunt.registerTask('default', [ 'clean', 'coffee', 'concat', 'bower_concat', 'copy' ])

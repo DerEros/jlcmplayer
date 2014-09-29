@@ -33,3 +33,6 @@ node_modules
 
 # Build results
 target
+
+# Secret files
+*_secret.json
