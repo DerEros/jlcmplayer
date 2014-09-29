@@ -8,10 +8,10 @@ crypto = require( 'crypto' )
 fs = require( 'fs' )
 _ = require( 'lodash' )
 _s = require( 'highland' )
-xml2js = require( 'xml2js' )
 util = require( 'util' )
 url = require( 'url' )
 http = require( 'http' )
+utils = require( './utils' )
 
 class AmazonCoverAPI
   constructor: ( config ) ->
@@ -24,7 +24,7 @@ class AmazonCoverAPI
 
     @_loadSecrets( __dirname + '/amazon_secret.json' )
 
-  getCover: ( album, artist ) ->
+  getCoverUrl: ( album, artist ) ->
     log.debug( "Getting cover for album #{album} by #{artist}" )
 
     params =
@@ -38,11 +38,8 @@ class AmazonCoverAPI
         .map( ( albumId ) -> _s.set( 'ItemId', albumId, params) )
         .map( @_generateURL )
         .flatMap( @_sendRequest )
-        .reduce1( @_concat )
-        .flatMap( @_parserXmlToStream )
-        .errors( ( err ) -> log.error( "Error parsing details. #{ err }" ) )
+        .through( utils.concatParseXml )
         .map( @_findImgLink )
-        .each( ( result ) -> log.warn( util.inspect(result, false, null ) ) )
 
 
   getAlbumId: ( album, artist ) ->
@@ -55,29 +52,14 @@ class AmazonCoverAPI
     if artist then _.assign( params, { Artist: artist } )
 
     fullUrl = @_generateURL( params )
-    @_sendRequest( fullUrl ).reduce1( @_concat )
-                            .flatMap( @_parserXmlToStream )
-                            .errors( ( err ) -> log.error( "Error parsing search result. #{ err }" ) )
+    @_sendRequest( fullUrl ).through( utils.concatParseXml )
                             .map( @_findItemId )
 
-  _sendRequest: ( fullUrl, method = @DEFAULT_METHOD ) ->
-    out = _s()
-    parsedUrl = url.parse( fullUrl )
-    options =
-      host: url.host
-      port: url.port
-      path: fullUrl
-      method: method
-      headers: {
-        Host: parsedUrl.host
-      }
-
-    log.trace( "Sending request to #{ parsedUrl.host }" )
-    req = http.request( options, ( res ) -> res.setEncoding( 'utf8' ); res.pipe( out ) )
-    req.on( 'error', ( err ) -> log.error( "Request error.", err ) )
-    req.end()
-
-    out
+  _sendRequest: ( fullUrl ) ->
+    log.trace( "Sending request to #{ fullUrl }" )
+    utils.GET( fullUrl )
+         .doto( ( res ) -> res.setEncoding('utf8' ) )
+         .flatMap( utils.response2Stream )
 
   _findItemId: ( searchResult ) ->
     try
@@ -88,7 +70,7 @@ class AmazonCoverAPI
 
   _findImgLink: ( searchResult ) ->
     try
-      searchResult.ItemLookupResponse.Items[0].Item[0].LargeImage[0].URL
+      searchResult.ItemLookupResponse.Items[0].Item[0].LargeImage[0].URL[0]
     catch error
       log.error( "Error getting image link from search result. #{error}" )
       throw error
@@ -133,8 +115,5 @@ class AmazonCoverAPI
     signature = crypto.createHmac( 'SHA256', @secret.secret ).update( strToSign ).digest( 'base64' );
     [ paramStr, encodeURIComponent( signature ) ]
 
-  _parserXmlToStream: _s.wrapCallback( xml2js.parseString )
-
-  _concat: ( a, b ) -> "#{a}#{b}"
 
 module.exports = AmazonCoverAPI

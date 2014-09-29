@@ -10,11 +10,8 @@ main = () ->
   log.info( 'Starting cover image cache server' )
   config = {}
 
-  rs = new RestServer( config )
+  rs = new RestServer( config, new AmazonCoverApi( config ) )
   rs.start()
-
-  aca = new AmazonCoverApi( config )
-  aca.getCover( "tierisch tolle kinderhits 3" )
 
 
 main()
