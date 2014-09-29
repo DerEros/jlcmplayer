@@ -14,22 +14,7 @@ class DummyData
     [
       {
         name: "NAS"
-        path: "/mnt/nas/Music"
-        active: false
-      }
-      {
-        name: "Home"
-        path: "/tmp"
-        active: true
-      }
-      {
-        name: "Local"
-        path: "/home/user/Music"
-        active: true
-      }
-      {
-        name: "Audiobooks"
-        path: "/mnt/audiobooks/files"
+        path: "/home/anony/Music"
         active: true
       }
     ]
