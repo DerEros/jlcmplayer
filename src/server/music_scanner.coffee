@@ -10,10 +10,12 @@ filewalker = require( 'filewalker' )
 fs  = require( 'fs' )
 lame = require( 'lame' )
 crypto = require( 'crypto' )
+CoverDownload = require( './cover_download' )
 
 class MusicScanner
   constructor: ( @config ) ->
     log.debug( "Constructing music scanner" )
+    @coverDownload = new CoverDownload( config )
 
   scan: ( sources ) ->
     log.debug( "About to scan now" )
@@ -31,6 +33,8 @@ class MusicScanner
                              .map( (a) -> _(a).pairs().map( _.last ).map( _.first ).value() )
                              .flatten()
                              .map( ( album ) => _s.set( '_id', @_createAlbumId( album ), album ) )
+
+    coverStream = albumStream.observe().flatMap( @coverDownload.addCoverFor ).each( (a) -> log.trace( "Need to store album with image") )
 
     [ mediaStream, albumStream ]
 
@@ -106,7 +110,7 @@ class MusicScanner
     id.update( tags.title )
     id.update( tags.album )
     id.update( tags.artist )
-    id.digest( 'base64' )
+    id.digest( 'hex' )
 
   #
   # Calculates a unique ID based on title and artist
@@ -115,7 +119,7 @@ class MusicScanner
     id = crypto.createHash( 'sha1' )
     id.update( tags.title )
     id.update( tags.artist )
-    id.digest( 'base64' )
+    id.digest( 'hex' )
 
   _logTags: ( tags ) -> log.trace("Got title '#{ tags.title }' from '#{ tags.album }' (#{ tags.artist })" )
 

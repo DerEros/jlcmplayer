@@ -18,7 +18,11 @@ writeDummyDataToDb = ( dataAccess ) ->
 
 main = () ->
   log.info( "Starting Server" )
-  config = {}
+  config = {
+    coverCacheHost: "localhost"
+    coverCachePort: 4000
+    coverDirectory: "#{__dirname}/covers"
+  }
 
   dataAccess = new DataAccess( config )
   musicScanner = new MusicScanner( config )
