@@ -3,6 +3,7 @@ express = require( 'express' )
 _s = require( 'highland' )
 _ = require( 'lodash' )
 bodyParser = require( 'body-parser' )
+fs = require( 'fs' )
 
 class RestServer
   constructor: ( config, @dataAccess, @musicScanner ) ->
@@ -37,6 +38,7 @@ class RestServer
 
     adminApp.get( "/lists", _.bind( @_scanSources, @ ) )
             .put( "/lists/:id", _.bind( @_updateList, @ ) )
+            .get( "/lists/:id/cover", _.bind( @_coverImage, @ ) )
 
     adminApp
 
@@ -86,6 +88,16 @@ class RestServer
     @dataAccess.updateListActivation( req.body ).map( @_withRes( res, 201 ) )
                .errors( @_errorWithStatus( res, 500 ) )
                .each( @_send )
+
+  _coverImage: ( req, res ) ->
+    id = req.params.id
+    log.debug( "Get cover request for #{ id }" )
+    @dataAccess.getList( id )
+                .errors( @_errorWithStatus( res, 404 ) )
+                .each( ( album ) ->
+                  out = res.status(200).contentType( album.cover.contentType )
+                  fs.createReadStream( album.cover.coverFilePath ).pipe( out )
+                )
 
   # Utility functions
   #####################

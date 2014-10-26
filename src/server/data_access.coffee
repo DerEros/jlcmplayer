@@ -104,6 +104,14 @@ class DataAccess
                .map( ( [ num, doc ] ) -> doc )
 
   #
+  # Get list by id
+  #
+  getList: ( id ) ->
+    log.trace( "Getting list by id" )
+    streamUtils.streamify( @db.lists, @db.lists.findOne, { _id: id } )
+               .errors( streamUtils.logAndForwardError( log, "Error getting list: " ) )
+
+  #
   # Get all media grouped by album. Merge both, list records and media records
   #
   getListsAndMedia: ->
