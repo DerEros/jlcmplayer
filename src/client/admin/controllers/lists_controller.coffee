@@ -6,12 +6,21 @@
       @lists = []
       @busy = true
 
-      @Restangular.all( 'admin' ).all( 'lists' ).getList().then( @_updateLists ).finally( @_unbusy )
+      @_getLists( {} )
 
     rescan: ->
-      @Restangular.all( 'admin' ).all( 'lists' ).getList( { rescan: true } ).then( @_updateLists ).finally( @_unbusy )
+      @_getLists( { rescan: true } )
 
     changeActivation: ( list ) => list.save()
+
+    _getLists: ( params ) ->
+            @Restangular.all( 'admin' ).all( 'lists' )
+            .getList( params )
+            .then( ( lists ) => _( lists ).map( ( list ) => _.assign( list, { cover: @_coverURI( list )} ) ).value() )
+            .then( @_updateLists )
+            .finally( @_unbusy )
+
+    _coverURI: ( list ) -> "admin/lists/#{ list._id }/cover"
 
     _updateLists: ( newLists ) => @lists = newLists
 

@@ -24,7 +24,7 @@
 
                     <!-- ------------- Album template ---------------- -->
                     <div ng-repeat="list in ctrl.lists">
-                        <img src="img/no_cover.png" alt="No Cover" class="col-xs-6 col-sm-4 col-lg-1"/>
+                        <img src="{{ list.cover }}" alt="Cover" class="col-xs-6 col-sm-4 col-lg-1"/>
                         <table class="table table-striped">
                             <tr>
                                 <td>
