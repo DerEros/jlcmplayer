@@ -74,4 +74,11 @@ class CoverDownload
     response.pipe( stream )
     stream
 
+  _contentType2Extension: ( contentType ) ->
+    switch contentType
+      when "image/jpeg" then ".jpeg"
+      when "image/png" then ".png"
+      when "image/gif" then ".gif"
+      else ""
+
 module.exports = CoverDownload
