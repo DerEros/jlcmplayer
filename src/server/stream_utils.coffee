@@ -13,6 +13,9 @@ _nodebackExists = ( name, cb ) ->
 # Streaming wrapper for fs.exists
 _checkExists = _s.wrapCallback( _nodebackExists )
 
+# Streaming wrapper for fs.rename
+_rename = _s.wrapCallback( fs.rename )
+
 # Logs an error to the given logger and than pushes it back into the stream for additional processing
 _logAndForwardError = _s.curry( (logger, text, error, push) ->
   logger.error(text, error)

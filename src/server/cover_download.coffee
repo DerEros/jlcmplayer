@@ -40,21 +40,26 @@ class CoverDownload
       if artist then "&artist=#{ encodeURIComponent( artist ) }" else ""
 
   _getCoverImage: ( id, url ) ->
-    coverImageStream = @_httpGetStream( url )
-                                     .errors( ( err ) -> log.error( "Error downloading cover image. #{ err }" ) )
-                                     .flatMap( @_response2Stream )
-
-    coverFilePath = "#{ @coverDirectory }/#{ id }"
-    log.trace( "About to download cover to #{ coverFilePath }" )
-    su.checkExists( coverFilePath )
-      .doto( ( exists ) -> log.trace( "File #{ id } exist: #{ exists }." ) )
-      .reject( ( exists ) -> exists )
-      .map( -> fs.createWriteStream( coverFilePath ) )
-      .doto( ( out ) -> out.on( 'finish', -> out.close() ) )
-      .doto( ( out ) -> coverImageStream.pipe( out ) )
+    @_httpGetStream( url )
+      .errors( ( err ) -> log.error( "Error downloading cover image. #{ err }" ) )
+      .map( ( res ) => {
+        headers: res.headers
+        coverFilePath: "#{ @coverDirectory }/#{ id }#{ @_contentType2Extension( res.headers[ "content-type" ] ) }"
+        imageStream: @_response2Stream( res )
+      } )
+      .doto( ( imageAndHeaders ) -> log.trace( "About to download cover to #{ imageAndHeaders.coverFilePath }" ) )
+      .flatMap( ( imageAndHeaders ) ->
+        su.checkExists( "#{ imageAndHeaders.coverFilePath }*" )
+          .map( ( exists ) -> _s.set( 'exists', exists, imageAndHeaders ) )
+      )
+      .doto( ( imageAndHeaders ) -> log.trace( "File #{ id } exist: #{ imageAndHeaders.exists }." ) )
+      .reject( ( imageAndHeaders ) -> imageAndHeaders.exists )
+      .map( ( imageAndHeaders ) -> _s.set( 'out', fs.createWriteStream( imageAndHeaders.coverFilePath ), imageAndHeaders ) )
+      .doto( ( imageAndHeaders ) -> imageAndHeaders.out.on( 'finish', -> imageAndHeaders.out.close() ) )
+      .doto( ( imageAndHeaders ) -> imageAndHeaders.imageStream.pipe( imageAndHeaders.out ) )
       .errors( ( err ) -> log.error( "Error storing image. #{ err }" ) )
-      .map( -> { coverFilePath } )
-      .otherwise( _s( [ { coverFilePath } ] ) )
+      .map( ( imageAndHeaders ) -> { coverFilePath: imageAndHeaders.coverFilePath } )
+#      .otherwise( _s( [ { coverFilePath } ] ) )
 
   _concat: ( a, b ) -> "#{a}#{b}"
 
@@ -73,5 +78,12 @@ class CoverDownload
     stream = _s()
     response.pipe( stream )
     stream
+
+  _contentType2Extension: ( contentType ) ->
+    switch contentType
+      when "image/jpeg" then ".jpeg"
+      when "image/png" then ".png"
+      when "image/gif" then ".gif"
+      else ""
 
 module.exports = CoverDownload
