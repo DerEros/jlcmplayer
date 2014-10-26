@@ -33,8 +33,7 @@ class MusicScanner
                              .map( (a) -> _(a).pairs().map( _.last ).map( _.first ).value() )
                              .flatten()
                              .map( ( album ) => _s.set( '_id', @_createAlbumId( album ), album ) )
-
-    coverStream = albumStream.observe().flatMap( @coverDownload.addCoverFor ).each( (a) -> log.trace( "Need to store album with image", a) )
+                             .flatMap( @coverDownload.addCoverFor )
 
     [ mediaStream, albumStream ]
 
