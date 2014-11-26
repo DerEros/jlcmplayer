@@ -22,6 +22,10 @@ module.exports = (grunt) ->
         src: [ 'target/client/admin/app.js', 'target/common/**/*.js', 'target/client/admin/**/*.js' ]
         dest: 'target/client/admin/admin.js'
 
+      player:
+        src: [ 'target/client/player/app.js', 'target/common/**/*.js', 'target/client/player/**/*.js' ]
+        dest: 'target/client/player/player.js'
+
     bower_concat:
       all:
         dest: 'target/client/3rdparty.js'
@@ -60,14 +64,30 @@ module.exports = (grunt) ->
           },
           {
             expand: true
-            cwd: 'src/client/'
-            src: 'img/**'
+            cwd: 'src/client/admin/'
+            src: 'views/**'
             dest: 'target/server/public/'
           },
           {
             expand: true
-            cwd: 'src/client/admin/'
+            cwd: 'target/client/player'
+            src: 'player.js'
+            dest: 'target/server/public'
+          },
+          {
+            src: 'src/client/player/index.html'
+            dest: 'target/server/public/index.html'
+          },
+          {
+            expand: true
+            cwd: 'src/client/player'
             src: 'views/**'
+            dest: 'target/server/public/'
+          },
+          {
+            expand: true
+            cwd: 'src/client/'
+            src: 'img/**'
             dest: 'target/server/public/'
           },
           {
