@@ -1,3 +1,21 @@
 <div class="app">
-    <div ng-repeat="list in ctrl.playlists">{{ list.title }}</div>
+    <div class="app-body">
+        <div class="app-content">
+            <div class="scrollable">
+                <div class="scrollable-content section">
+                    <div class="container">
+                        <div class="row">
+                            <div ng-repeat="list in ctrl.playlists" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                <img src="{{ list.cover }}" class="col-xs-6"/>
+                                <div class="col-xs-6">
+                                    <div>{{ list.title }}</div>
+                                    <div>{{ list.artist }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
