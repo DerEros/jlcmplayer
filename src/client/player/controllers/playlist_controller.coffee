@@ -10,6 +10,11 @@
     rescan: ->
       @_getPlaylists( { rescan: true } )
 
+    play: ( id ) ->
+      alert( "Playing #{ id }" )
+
+      @Restangular.all( 'player' ).post( 'playlist', { list_id: id } )
+
     _getPlaylists: ( params ) ->
       @Restangular.all( 'admin' ).all( 'lists' )
       .getList( params )

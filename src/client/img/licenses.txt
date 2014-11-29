@@ -1,0 +1,9 @@
+ play.svg
+
+ By: Daniele De Santis
+ License: Creative Commons (Attribution 3.0 Unported)
+ Downloaded from: https://www.iconfinder.com/icons/344692/arrow_audio_media_music_outline_play_player_right_sound_video_icon#size=128
+
+ Modifications:
+ - made it white (instead of black)
+ - removed the outer circle

@@ -5,8 +5,11 @@
                 <div class="scrollable-content section">
                     <div class="container">
                         <div class="row">
-                            <div ng-repeat="list in ctrl.playlists" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                <img src="{{ list.cover }}" class="col-xs-6"/>
+                            <div ng-repeat="list in ctrl.playlists" class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="height: 170px">
+                                <a class="col-xs-6" style="position: relative; inline-display: block; height: 150px; width: 150px;" ng-click="ctrl.play( list._id )">
+                                    <img src="{{ list.cover }}" style="position: absolute; z-index: 10; height: 150px; width: 150px;"/>
+                                    <img src="img/play.svg" style="position: absolute; z-index: 20; height: 150px; width: 150px;"/>
+                                </a>
                                 <div class="col-xs-6">
                                     <div>{{ list.title }}</div>
                                     <div>{{ list.artist }}</div>
